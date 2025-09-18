@@ -27,21 +27,22 @@ const Task = mongoose.model("Task", TaskSchema);
 
 let channel, connection;
 
-async function connectRabbitMQWithRetry(retries = 5, delay = 3000) {
+async function connectRabbitMQWithRetry(retries = 30, delay = 5000) {
   while (retries) {
     try {
-      connection = await amqp.connect("amqp://rabbitmq");
+      connection = await amqp.connect("amqp://guest:guest@rabbitmq:5672");
       channel = await connection.createChannel();
       await channel.assertQueue("task_created");
-      console.log("Connected to RabbitMQ");
+      console.log("✅ Connected to RabbitMQ");
       return;
     } catch (e) {
-      console.error("RabbitMQ connection error : ", e.message);
+      console.error("RabbitMQ connection error : ", e);
       retries--;
-      console.error("Retries : ", retries);
+      console.error("Retries left : ", retries);
       await new Promise((res) => setTimeout(res, delay));
     }
   }
+  console.error("❌ Could not connect to RabbitMQ after retries");
 }
 
 app.get("/task", async (req, res) => {

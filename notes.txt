@@ -1,0 +1,8 @@
+docker volume rm nodejs-microservice_mongo_data
+
+URI from other docker containers:
+mongodb://mongo:27017/users
+
+docker logs <container_name> - will show the error loags of the containers
+docker exec -it <container_name> bash - to get into the container
+docker-compose up -d --build - fresh build if any code changes
