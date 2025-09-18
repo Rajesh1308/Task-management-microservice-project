@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: "mongo:6"
+    container_name: mongo
+    ports:
+      - "5010:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongodb
+
+  task-service:
+    build: ./task-service
+    container_name: task-service
+    ports:
+      - 5001:5001
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:

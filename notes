@@ -1,0 +1,4 @@
+docker volume rm nodejs-microservice_mongo_data
+
+URI from other docker containers:
+mongodb://mongo:27017/users
